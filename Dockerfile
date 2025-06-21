@@ -1,10 +1,14 @@
-FROM maven:3.9.4-amazoncorretto-17 AS build
-WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests
+# Use OpenJDK base image
+FROM openjdk:17-jdk-slim
 
-FROM amazoncorretto:17
+# Set the working directory
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+
+# Copy the jar file into the container
+COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose port 8080 to Render
 EXPOSE 8080
+
+# Run the jar file
 ENTRYPOINT ["java", "-jar", "app.jar"]
